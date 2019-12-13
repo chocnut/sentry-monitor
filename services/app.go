@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/chocnut/sentry-api/domain"
+	"github.com/olekukonko/tablewriter"
 )
 
 var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/sa_web/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
@@ -41,10 +44,11 @@ func Run() {
 		return data[j].UserCount < data[i].UserCount
 	})
 
-	fmt.Printf("ID    | User Count| Title | Permalink    | \n")
-	for _, issue := range data {
-		fmt.Printf("|%s| %-10v| %30v| %-10v|\n", issue.ID, issue.UserCount, issue.Title, issue.Permalink)
-	}
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"ID", "User Count", "Title", "Permalink"})
 
-	fmt.Println("done!")
+	for _, issue := range data {
+		table.Append([]string{issue.ID, strconv.Itoa(issue.UserCount), issue.Title, issue.Permalink})
+	}
+	table.Render()
 }
