@@ -17,6 +17,10 @@ var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/sa_web
 
 var bearer = "Bearer 522a48dcfa15484ab5f540864b71ccfd46bfa41794fd440fa3a4d947b9c8717b"
 
+/*
+Run ...
+bootstrap
+*/
 func Run() {
 
 	req, error := http.NewRequest("GET", sentryURL, nil)
@@ -48,7 +52,16 @@ func Run() {
 	table.SetHeader([]string{"ID", "User Count", "Title", "Permalink"})
 
 	for _, issue := range data {
-		table.Append([]string{issue.ID, strconv.Itoa(issue.UserCount), issue.Title, issue.Permalink})
+		row := []string{issue.ID, strconv.Itoa(issue.UserCount), issue.Title, issue.Permalink}
+
+		if issue.UserCount >= 5000 {
+			table.Rich(row, []tablewriter.Colors{tablewriter.Colors{}, tablewriter.Colors{tablewriter.Bold, tablewriter.FgHiRedColor}, tablewriter.Colors{tablewriter.Bold, tablewriter.FgWhiteColor}, tablewriter.Colors{tablewriter.Normal, tablewriter.FgHiBlueColor}})
+		} else if issue.UserCount >= 1000 && issue.UserCount <= 5000 {
+			table.Rich(row, []tablewriter.Colors{tablewriter.Colors{}, tablewriter.Colors{tablewriter.Bold, tablewriter.FgHiYellowColor}, tablewriter.Colors{tablewriter.Bold, tablewriter.FgWhiteColor}, tablewriter.Colors{tablewriter.Normal, tablewriter.FgHiBlueColor}})
+		} else {
+			table.Rich(row, []tablewriter.Colors{tablewriter.Colors{}, tablewriter.Colors{tablewriter.Bold, tablewriter.FgHiGreenColor}, tablewriter.Colors{tablewriter.Bold, tablewriter.FgWhiteColor}, tablewriter.Colors{tablewriter.Normal, tablewriter.FgHiBlueColor}})
+		}
+
 	}
 	table.Render()
 }
