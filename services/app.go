@@ -17,18 +17,32 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-/*
-Run ...
-bootstrap
-*/
-func Run() {
+var limit int
+var sortBy string
+var period string
+var env string
 
-	limit := flag.Int("limit", 25, "Result limit")
-	sortBy := flag.String("sort", "freq", "Sort by")
-	period := flag.String("period", "14d", "Period")
-	env := flag.String("env", "production", "Environment")
+func initFlags() {
+	flag.IntVar(&limit, "limit", 25, "Result limit")
+	flag.IntVar(&limit, "l", 25, "Result limit (shorthand)")
+
+	flag.StringVar(&sortBy, "sort", "freq", "Sort by")
+	flag.StringVar(&sortBy, "s", "freq", "Sort by (shorthand)")
+
+	flag.StringVar(&period, "period", "14d", "Period")
+	flag.StringVar(&period, "p", "14d", "Period (shorthand)")
+
+	flag.StringVar(&env, "env", "production", "Environment")
+	flag.StringVar(&env, "e", "production", "Environment (shorthand)")
 
 	flag.Parse()
+}
+
+/*
+Run ...
+Bootstrap
+*/
+func Run() {
 
 	err := godotenv.Load()
 
@@ -36,10 +50,12 @@ func Run() {
 		log.Fatal("Error loading .env file")
 	}
 
+	initFlags()
+
 	sentryURL := os.Getenv("SENTRY_URL")
 	token := os.Getenv("SENTRY_TOKEN")
 
-	sentryURL += fmt.Sprintf("/issues/?query=environment:%s+is:unresolved&sort=%s&statsPeriod=%s&limit=%d", *env, *sortBy, *period, *limit)
+	sentryURL += fmt.Sprintf("/issues/?query=environment:%s+is:unresolved&sort=%s&statsPeriod=%s&limit=%d", env, sortBy, period, limit)
 	req, error := http.NewRequest("GET", sentryURL, nil)
 
 	req.Header.Add("Authorization", "Bearer "+token)
