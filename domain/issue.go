@@ -6,4 +6,5 @@ type Issue struct {
 	UserCount int64  `json:userCount`
 	Permalink string `json:permalink`
 	Count     string `json:count`
+	LastSeen  string `json:lastSeen`
 }

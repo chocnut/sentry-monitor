@@ -1,10 +1,21 @@
 package main
 
-import app "github.com/chocnut/sentry-api/services"
+import (
+	"time"
+
+	tm "github.com/buger/goterm"
+
+	app "github.com/chocnut/sentry-api/services"
+)
 
 func main() {
-	// for true {
-	app.Run()
-	// }
+	tm.Clear()
+	for {
+		tm.MoveCursor(1, 1)
+		tm.Flush()
+		app.Run()
+
+		time.Sleep(time.Second * 60)
+	}
 
 }

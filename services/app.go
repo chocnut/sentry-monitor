@@ -14,9 +14,9 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/sa_web/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
+// var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/sa_web/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
 
-// var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/wypv3_webapp/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
+var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/sa_api/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
 
 var bearer = "Bearer 522a48dcfa15484ab5f540864b71ccfd46bfa41794fd440fa3a4d947b9c8717b"
 
@@ -54,11 +54,12 @@ func Run() {
 	})
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"ID", "Event Count", "User Count", "Title", "Permalink"})
+	table.SetHeader([]string{"ID", "Event Count", "User Count", "Last Seen", "Title", "Permalink"})
 
 	for _, issue := range data {
 		i64, _ := strconv.ParseInt(issue.Count, 10, 32)
-		row := []string{issue.ID, humanize.Comma(i64), humanize.Comma(issue.UserCount), issue.Title, issue.Permalink}
+		lastSeen, _ := time.Parse(time.RFC3339, issue.LastSeen)
+		row := []string{issue.ID, humanize.Comma(i64), humanize.Comma(issue.UserCount), humanize.Time(lastSeen), issue.Title, issue.Permalink}
 
 		if issue.UserCount >= 5000 {
 			table.Rich(row, []tablewriter.Colors{tablewriter.Colors{}, tablewriter.Colors{tablewriter.Bold, tablewriter.FgHiRedColor}, tablewriter.Colors{tablewriter.Bold, tablewriter.FgWhiteColor}, tablewriter.Colors{tablewriter.Normal, tablewriter.FgHiBlueColor}})
