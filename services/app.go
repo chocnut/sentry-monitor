@@ -3,6 +3,7 @@ package services
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"sort"
@@ -11,26 +12,28 @@ import (
 
 	"github.com/chocnut/sentry-api/domain"
 	humanize "github.com/dustin/go-humanize"
+	"github.com/joho/godotenv"
 	"github.com/olekukonko/tablewriter"
 )
-
-var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/sa_web/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
-
-// var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/sa_api/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
-
-var bearer = "Bearer 522a48dcfa15484ab5f540864b71ccfd46bfa41794fd440fa3a4d947b9c8717b"
-
-// var bearer = "Bearer 28ae8bfebc444d61996fa694c347bbd3d42fd504983f493bb1b0e6db175ab5b1"
 
 /*
 Run ...
 bootstrap
 */
 func Run() {
+	err := godotenv.Load()
 
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	sentryURL := os.Getenv("SENTRY_URL")
+	token := os.Getenv("SENTRY_TOKEN")
+
+	sentryURL += "/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
 	req, error := http.NewRequest("GET", sentryURL, nil)
 
-	req.Header.Add("Authorization", bearer)
+	req.Header.Add("Authorization", "Bearer "+token)
 
 	client := &http.Client{
 		Timeout: time.Second * 40,
