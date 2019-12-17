@@ -14,9 +14,9 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-// var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/sa_web/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
+var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/sa_web/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
 
-var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/sa_api/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
+// var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/sa_api/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
 
 var bearer = "Bearer 522a48dcfa15484ab5f540864b71ccfd46bfa41794fd440fa3a4d947b9c8717b"
 
