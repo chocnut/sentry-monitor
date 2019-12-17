@@ -10,12 +10,17 @@ import (
 	"time"
 
 	"github.com/chocnut/sentry-api/domain"
+	humanize "github.com/dustin/go-humanize"
 	"github.com/olekukonko/tablewriter"
 )
 
 var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/sa_web/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
 
+// var sentryURL = "https://sentry.infostreamgroup.com/api/0/projects/reflex/wypv3_webapp/issues/?query=environment:production+is:unresolved&sort=freq&statsPeriod=14d&limit=25"
+
 var bearer = "Bearer 522a48dcfa15484ab5f540864b71ccfd46bfa41794fd440fa3a4d947b9c8717b"
+
+// var bearer = "Bearer 28ae8bfebc444d61996fa694c347bbd3d42fd504983f493bb1b0e6db175ab5b1"
 
 /*
 Run ...
@@ -49,10 +54,11 @@ func Run() {
 	})
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"ID", "User Count", "Title", "Permalink"})
+	table.SetHeader([]string{"ID", "Event Count", "User Count", "Title", "Permalink"})
 
 	for _, issue := range data {
-		row := []string{issue.ID, strconv.Itoa(issue.UserCount), issue.Title, issue.Permalink}
+		i64, _ := strconv.ParseInt(issue.Count, 10, 32)
+		row := []string{issue.ID, humanize.Comma(i64), humanize.Comma(issue.UserCount), issue.Title, issue.Permalink}
 
 		if issue.UserCount >= 5000 {
 			table.Rich(row, []tablewriter.Colors{tablewriter.Colors{}, tablewriter.Colors{tablewriter.Bold, tablewriter.FgHiRedColor}, tablewriter.Colors{tablewriter.Bold, tablewriter.FgWhiteColor}, tablewriter.Colors{tablewriter.Normal, tablewriter.FgHiBlueColor}})

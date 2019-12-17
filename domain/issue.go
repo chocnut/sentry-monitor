@@ -3,6 +3,7 @@ package domain
 type Issue struct {
 	ID        string `json:id`
 	Title     string `json:title`
-	UserCount int    `json:userCount`
+	UserCount int64  `json:userCount`
 	Permalink string `json:permalink`
+	Count     string `json:count`
 }
