@@ -23,17 +23,25 @@ var period string
 var env string
 
 func initFlags() {
-	flag.IntVar(&limit, "limit", 25, "Result limit")
-	flag.IntVar(&limit, "l", 25, "Result limit (shorthand)")
+	if flag.Lookup("limit") == nil {
+		flag.IntVar(&limit, "limit", 25, "Result limit")
+		flag.IntVar(&limit, "l", 25, "Result limit (shorthand)")
+	}
 
-	flag.StringVar(&sortBy, "sort", "freq", "Sort by")
-	flag.StringVar(&sortBy, "s", "freq", "Sort by (shorthand)")
+	if flag.Lookup("sort") == nil {
+		flag.StringVar(&sortBy, "sort", "freq", "Sort by")
+		flag.StringVar(&sortBy, "s", "freq", "Sort by (shorthand)")
+	}
 
-	flag.StringVar(&period, "period", "14d", "Period")
-	flag.StringVar(&period, "p", "14d", "Period (shorthand)")
+	if flag.Lookup("period") == nil {
+		flag.StringVar(&period, "period", "14d", "Period")
+		flag.StringVar(&period, "p", "14d", "Period (shorthand)")
+	}
 
-	flag.StringVar(&env, "env", "production", "Environment")
-	flag.StringVar(&env, "e", "production", "Environment (shorthand)")
+	if flag.Lookup("env") == nil {
+		flag.StringVar(&env, "env", "production", "Environment")
+		flag.StringVar(&env, "e", "production", "Environment (shorthand)")
+	}
 
 	flag.Parse()
 }

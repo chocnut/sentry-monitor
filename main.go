@@ -14,8 +14,7 @@ func main() {
 		tm.MoveCursor(1, 1)
 		tm.Flush()
 		app.Run()
-
-		time.Sleep(time.Second * 60)
+		time.After(60 * time.Second)
 	}
 
 }
